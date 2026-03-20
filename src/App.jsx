@@ -518,7 +518,7 @@ export default function App() {
 
         {/* ── HEADER ── */}
         <header className="header">
-          <div className="logo">Kenn<span>.</span>Mail</div>
+          <div className="logo">AI<span>.</span>KennDoesDev</div>
 
           {view === "working" && mode && (
             <div className="mode-badge">
