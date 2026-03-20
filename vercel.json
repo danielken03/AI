@@ -1,11 +1,5 @@
 {
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" }
-  ],
-  "functions": {
-    "api/chat.py": {
-      "runtime": "python3.12"
-    }
-  },
-  "installCommand": "npm install && pip install anthropic"
+  ]
 }
