@@ -14,6 +14,29 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(null);
 
+  const composePlaceholders = [
+    'e.g. "Write an email to my manager requesting Friday off..."',
+    'e.g. "Email my colleagues to follow up on..."',
+    'e.g. "Write a follow-up email after a job interview at Google..."',
+    'e.g. "Email my team announcing a meeting change to Thursday..."',
+    'e.g. "Invite my team to a meeting on Tuesday to go over..."',
+  ];
+
+  const replyPlaceholders = [
+    'Paste the email thread here, then add: "Reply and say I can meet Thursday..."',
+    'Paste the email thread here, then add: "Decline politely and suggest next week..."',
+    'Paste the email thread here, then add: "Reply and ask for more details on the budget..."',
+    'Paste the email thread here, then add: "Accept the offer and confirm the start date..."',
+    'Paste the email thread here, then add: "Reply and say I need more time to review..."',
+  ];
+
+  const [composePlaceholder] = useState(
+    () => composePlaceholders[Math.floor(Math.random() * composePlaceholders.length)]
+  );
+  const [replyPlaceholder] = useState(
+    () => replyPlaceholders[Math.floor(Math.random() * replyPlaceholders.length)]
+  );
+
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -516,8 +539,8 @@ export default function App() {
         {view === "home" && (
           <main className="home">
             <div className="tagline">
-              <h1>Write emails that<br />sound like you.</h1>
-              <p>Professional, human, and to the point — every time.</p>
+              <h1>Write professional emails<br />that sound like you.</h1>
+              <p>Time is money, be more productive with this AI agent.</p>
             </div>
 
             <div className="panels">
@@ -530,7 +553,7 @@ export default function App() {
                 <textarea
                   value={homeCompose}
                   onChange={(e) => setHomeCompose(e.target.value)}
-                  placeholder="e.g. &quot;Write an email to my manager requesting Friday off for a doctor's appointment...&quot;"
+                  placeholder={composePlaceholder}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
                       e.preventDefault();
@@ -557,7 +580,7 @@ export default function App() {
                 <textarea
                   value={homeReply}
                   onChange={(e) => setHomeReply(e.target.value)}
-                  placeholder='Paste the email thread here, then add: "Reply and say I can meet Thursday at 2pm..."'
+                  placeholder={replyPlaceholder}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
                       e.preventDefault();
