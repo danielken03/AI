@@ -611,7 +611,7 @@ export default function App() {
               {messages.map((msg, i) => (
                 <div key={i} className={`message ${msg.role}`}>
                   <div className="msg-label">
-                    {msg.role === "user" ? "You" : "MailAI"}
+                    {msg.role === "user" ? "You" : "AI Email Agent"}
                   </div>
                   <div className="msg-body">{msg.content}</div>
                   {msg.role === "assistant" && (
@@ -645,7 +645,7 @@ export default function App() {
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder='Refine it — e.g. "Make it shorter" or "Sound less formal"...'
+                placeholder='"Make it shorter" or "Sound less formal"...'
                 rows={1}
               />
               <button
