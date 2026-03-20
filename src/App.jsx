@@ -530,7 +530,7 @@ export default function App() {
                 <textarea
                   value={homeCompose}
                   onChange={(e) => setHomeCompose(e.target.value)}
-                  placeholder='e.g. "Write an email to my manager requesting Friday off for a doctor's appointment..."'
+                  placeholder="e.g. &quot;Write an email to my manager requesting Friday off for a doctor's appointment...&quot;"
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
                       e.preventDefault();
