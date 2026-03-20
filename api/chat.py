@@ -1,8 +1,7 @@
-from flask import Flask, request, jsonify
+from http.server import BaseHTTPRequestHandler
+import json
 import os
 import anthropic
-
-app = Flask(__name__)
 
 COMPOSE_SYSTEM = """You are a professional email writing assistant. Your only job is to write polished, human-sounding emails based on what the user describes.
 
@@ -33,34 +32,45 @@ Follow these rules strictly:
 10. The reply must not sound like it was written by AI."""
 
 
-@app.route("/api/chat", methods=["POST", "OPTIONS"])
-def chat():
-    if request.method == "OPTIONS":
-        res = jsonify({})
-        res.headers["Access-Control-Allow-Origin"] = "*"
-        res.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
-        res.headers["Access-Control-Allow-Headers"] = "Content-Type"
-        return res, 200
+class handler(BaseHTTPRequestHandler):
 
-    try:
-        body = request.get_json()
-        messages = body.get("messages", [])
-        mode = body.get("mode", "compose")
-        system = COMPOSE_SYSTEM if mode == "compose" else REPLY_SYSTEM
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self._cors()
+        self.end_headers()
 
-        client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
-        response = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=2048,
-            system=system,
-            messages=messages
-        )
+    def do_POST(self):
+        try:
+            length = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(length))
 
-        res = jsonify({"reply": response.content[0].text})
-        res.headers["Access-Control-Allow-Origin"] = "*"
-        return res, 200
+            messages = body.get("messages", [])
+            mode = body.get("mode", "compose")
+            system = COMPOSE_SYSTEM if mode == "compose" else REPLY_SYSTEM
 
-    except Exception as e:
-        res = jsonify({"error": str(e)})
-        res.headers["Access-Control-Allow-Origin"] = "*"
-        return res, 500
+            client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+            response = client.messages.create(
+                model="claude-sonnet-4-20250514",
+                max_tokens=2048,
+                system=system,
+                messages=messages
+            )
+
+            self._send(200, {"reply": response.content[0].text})
+
+        except Exception as e:
+            import traceback
+            print(traceback.format_exc())
+            self._send(500, {"error": str(e)})
+
+    def _send(self, status, data):
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self._cors()
+        self.end_headers()
+        self.wfile.write(json.dumps(data).encode())
+
+    def _cors(self):
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
