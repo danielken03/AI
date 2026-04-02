@@ -11,6 +11,7 @@ export default function App() {
   const [inputText, setInputText] = useState("");
   const [homeCompose, setHomeCompose] = useState("");
   const [homeReply, setHomeReply] = useState("");
+  const [homeReplyThread, setHomeReplyThread] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(null);
 
@@ -23,11 +24,11 @@ export default function App() {
   ];
 
   const replyPlaceholders = [
-    'Paste the email thread here, then add: "Reply and say I can meet Thursday..."',
-    'Paste the email thread here, then add: "Decline politely and suggest next week..."',
-    'Paste the email thread here, then add: "Reply and ask for more details on the budget..."',
-    'Paste the email thread here, then add: "Accept the offer and confirm the start date..."',
-    'Paste the email thread here, then add: "Reply and say I need more time to review..."',
+    'e.g. "Reply and say I can meet Thursday..."',
+    'e.g. "Decline politely and suggest next week..."',
+    'e.g. "Ask for more details on the budget..."',
+    'e.g. "Accept the offer and confirm the start date..."',
+    'e.g. "Say I need more time to review..."',
   ];
 
   const [composePlaceholder] = useState(
@@ -82,10 +83,13 @@ export default function App() {
   // Called when user submits from the home screen
   const handleHomeSubmit = (selectedMode, text) => {
     if (!text.trim()) return;
+    const finalText = selectedMode === "reply" && homeReplyThread.trim()
+      ? `Email thread:\n${homeReplyThread}\n\nHow I want to reply:\n${text}`
+      : text;
     setMode(selectedMode);
     setMessages([]);
     setView("working");
-    sendMessage(text, [], selectedMode);
+    sendMessage(finalText, [], selectedMode);
   };
 
   // Called when user sends a follow-up in the working view
@@ -111,6 +115,7 @@ export default function App() {
     setInputText("");
     setHomeCompose("");
     setHomeReply("");
+    setHomeReplyThread("");
   };
 
   // Enter to send, Shift+Enter for newline
@@ -319,6 +324,15 @@ export default function App() {
         .panel-footer {
           display: flex;
           justify-content: flex-end;
+        }
+
+        .panel-input-label {
+          font-size: 9px;
+          font-weight: 500;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--muted);
+          margin-bottom: -6px;
         }
 
         .primary-btn {
@@ -576,11 +590,20 @@ export default function App() {
               <div className="panel">
                 <div className="panel-tag">Reply</div>
                 <h2>Reply to an email</h2>
-                <p>Paste the email or chain, then say how you want to respond.</p>
+                <p>Paste the email or chain, then describe how you want to respond.</p>
+                <div className="panel-input-label">Email or chain</div>
+                <textarea
+                  value={homeReplyThread}
+                  onChange={(e) => setHomeReplyThread(e.target.value)}
+                  placeholder="Paste the email or thread you're replying to..."
+                  style={{ minHeight: "120px" }}
+                />
+                <div className="panel-input-label">Your instructions</div>
                 <textarea
                   value={homeReply}
                   onChange={(e) => setHomeReply(e.target.value)}
                   placeholder={replyPlaceholder}
+                  style={{ minHeight: "72px" }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
                       e.preventDefault();
@@ -592,7 +615,7 @@ export default function App() {
                   <button
                     className="primary-btn"
                     onClick={() => handleHomeSubmit("reply", homeReply)}
-                    disabled={!homeReply.trim()}
+                    disabled={!homeReplyThread.trim() || !homeReply.trim()}
                   >
                     Write Reply →
                   </button>
