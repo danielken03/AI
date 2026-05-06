@@ -1,7 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 
-// Point this at your Flask server. In dev: http://localhost:5000
-// In production: https://api.kenndoesdev.com or wherever you host Flask
 const API_URL = "";
 
 export default function App() {
@@ -134,14 +132,14 @@ export default function App() {
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-          --bg:          #0c0c0e;
-          --surface:     #141416;
-          --surface2:    #1c1c1f;
-          --border:      #272729;
-          --text:        #e8e3d9;
-          --muted:       #6b6760;
-          --gold:        #c9a84c;
-          --gold-dim:    #7a6530;
+          --bg:          #191919;
+          --surface:     #1C1C1C;
+          --surface2:    #212121;
+          --border:      #333333;
+          --text:        #F0F0F0;
+          --muted:       #828282;
+          --gold:        #C9A76B;
+          --gold-dim:    #B8965A;
           --radius:      4px;
           --font-serif:  'Cormorant Garamond', serif;
           --font-sans:   'DM Sans', sans-serif;
@@ -337,7 +335,7 @@ export default function App() {
 
         .primary-btn {
           background: var(--gold);
-          color: #0c0c0e;
+          color: #0F0F0F;
           border: none;
           padding: 10px 22px;
           font-family: var(--font-sans);
@@ -350,7 +348,7 @@ export default function App() {
           transition: background 0.2s, opacity 0.2s;
         }
 
-        .primary-btn:hover:not(:disabled) { background: #d4b464; }
+        .primary-btn:hover:not(:disabled) { background: #C2A064; }
         .primary-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
         /* ─── WORKING VIEW ───────────────────────────────── */
@@ -506,13 +504,13 @@ export default function App() {
           transition: background 0.2s, opacity 0.2s;
         }
 
-        .send-btn:hover:not(:disabled) { background: #d4b464; }
+        .send-btn:hover:not(:disabled) { background: #C2A064; }
         .send-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
         .send-btn svg {
           width: 16px; height: 16px;
           fill: none;
-          stroke: #0c0c0e;
+          stroke: #0F0F0F;
           stroke-width: 2.2;
           stroke-linecap: round;
           stroke-linejoin: round;
